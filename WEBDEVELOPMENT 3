@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Game board grid -->
+        <div class="board" id="board">
+            <!-- Squares will be dynamically generated using JavaScript -->
+        </div>
+        <button id="reset-btn">Reset</button>
+    </div>
+    <script>
+        // JavaScript code for handling game logic will go here
+        // Define variables for the game state
+        let currentPlayer = 'X';
+        let gameStatus = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+
+        // Function to handle click on a square
+        function handleSquareClick(index) {
+            if (gameStatus[index] === '' && gameActive) {
+                gameStatus[index] = currentPlayer;
+                document.getElementById(`square${index}`).innerText = currentPlayer;
+                if (checkWin() || checkDraw()) {
+                    gameActive = false;
+                    return;
+                }
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            }
+        }
+
+        // Function to check for a win
+        function checkWin() {
+            const winConditions = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6] // Diagonals
+            ];
+            for (let condition of winConditions) {
+                const [a, b, c] = condition;
+                if (gameStatus[a] !== '' && gameStatus[a] === gameStatus[b] && gameStatus[a] === gameStatus[c]) {
+                    alert(`${gameStatus[a]} wins!`);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Function to check for a draw
+        function checkDraw() {
+            if (!gameStatus.includes('')) {
+                alert("It's a draw!");
+                return true;
+            }
+            return false;
+        }
+
+        // Function to reset the game
+        function resetGame() {
+            currentPlayer = 'X';
+            gameStatus = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            const squares = document.querySelectorAll('.square');
+            squares.forEach(square => {
+                square.innerText = '';
+            });
+        }
+.container {
+    text-align: center;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-gap: 5px;
+    margin: 20px auto;
+}
+
+.square {
+    width: 100px;
+    height: 100px;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    cursor: pointer;
+}
+
+.square:hover {
+    background-color: #ddd;
+}
+
+button {
+    font-size: 1em;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+        // Create the game board
+        const board = document.getElementById('board');
+        for (let i = 0; i < 9; i++) {
+            const square = document.createElement('div');
+            square.classList.add('square');
+            square.id = `square${i}`;
+            square.addEventListener('click', () => handleSquareClick(i));
+            board.appendChild(square);
+        }
+
+        // Add event listener to the reset button
+        document.getElementById('reset-btn').addEventListener('click', resetGame);
+    </script>
+</body>
+</html>
